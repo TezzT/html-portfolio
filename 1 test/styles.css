@@ -99,6 +99,7 @@ background-color: #272b31;
   cursor: pointer;
 }
 
+
 @media (max-width: 480px) {
   .navbar {
     justify-content: space-around;
@@ -108,7 +109,7 @@ background-color: #272b31;
     margin-left: 0px; /* 10% margin from the left side */
   }
   
-.navbutt {
-  margin-right: 5%; 
-}
+  .navbutt {
+    margin-right: 0; 
+  }
 }
