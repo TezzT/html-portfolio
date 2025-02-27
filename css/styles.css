@@ -130,9 +130,8 @@ body {
 
 /* Output Styling */
 #ocrRESULT {
-    text-align: center;
-    letter-spacing: 0.4em;
-    font-size: 24px;
+    text-align: center;    
+    letter-spacing: 0.5em;
 }
 
 h4 {

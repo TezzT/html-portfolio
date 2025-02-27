@@ -148,7 +148,7 @@ function drawPUAToCanvas() {
 
     document.getElementById('inputContainer3').style.display = 'flex';
 
-    let charSpacing = 50;
+    let charSpacing = 40;
     let maxWidth = window.innerWidth - 20;
     let canvasWidth = Math.min(maxWidth, Math.max(500, puaCharList.length * charSpacing + 10));
     let canvasHeight = 80;
@@ -160,8 +160,7 @@ function drawPUAToCanvas() {
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
     ctx.fillStyle = "black";
-    ctx.font = "30px 'jjwxcfont', Arial";
-    ctx.textBaseline = 'middle'; 
+    ctx.font = "20px 'jjwxcfont', Arial";
 
     let xPos = 10;
     puaToOcrMap.clear();
