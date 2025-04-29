@@ -345,7 +345,7 @@ document.getElementById('copyButton').addEventListener('click', function () {
 
 // Notif when web loads
 window.addEventListener('load', function () {
-    notificationManager.showNotification("Thank you for using this project!<br><br>I hope you find this project helpful. Your support means a lot! If you'd like to support, please consider donating on Ko-Fi or sharing this project with others.<br><br>If you have feedback, join the Discord server to share your thoughts!");
+    notificationManager.showNotification("Please consider donating to ko-fi or sharing if you find this project useful.");
     notificationManager.showNotification("If you encounter any issues, please report them to me. Your feedback is invaluable and helps me improve this project.");
 });
 
@@ -385,4 +385,14 @@ modeToggleButton.addEventListener('click', function () {
             </svg>
         `;
     }
+});
+
+
+
+// ==================== SCROLL DOWN BUTTON ====================
+
+const scrolltobottomofpage = document.getElementById('scrolldown');
+
+scrolltobottomofpage.addEventListener('click', function () {
+    scrollToBottom();
 });
