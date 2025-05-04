@@ -4,7 +4,6 @@ const inputElement1 = document.getElementById('inputContent1');
 const outputElement1 = document.getElementById('outputContent1');
 const keyInputElement = document.getElementById('keyInput');
 const ocrOutputElement = document.getElementById('ocrOutput');
-const ocrResultElement = document.getElementById('ocrRESULT');
 const dynamicStyles = document.getElementById('dynamic-styles');
 const puaCanvas = document.getElementById('puaCanvas');
 const updateCanvasButton = document.getElementById('updateCanvasButton');
@@ -139,73 +138,116 @@ function updateManualOverride(char, newValue) {
  * Draws PUA characters onto the canvas and performs OCR.
  */
 function drawPUAToCanvas() {
-    let ctx = puaCanvas.getContext("2d");
-
     if (puaCharList.length === 0) {
         console.log("No PUA characters to draw.");
         return;
     }
 
-    document.getElementById('inputContainer3').style.display = 'flex';
+    const container = document.getElementById('inputContainer3');
+    container.style.display = 'flex';
+    container.innerHTML = ''; // Clear previous content
 
-    let charSpacing = 40;
-    let maxWidth = window.innerWidth - 20;
-    let canvasWidth = Math.min(maxWidth, Math.max(500, puaCharList.length * charSpacing + 10));
-    let canvasHeight = 80;
+    const instructionHeading = document.createElement('h4');
+    instructionHeading.textContent = 'Verify OCR: Copy characters from here if manual replacement needed';
+    container.appendChild(instructionHeading);
 
-    puaCanvas.width = canvasWidth;
-    puaCanvas.height = canvasHeight;
-
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-
-    ctx.fillStyle = "black";
-    ctx.font = "20px 'jjwxcfont', Arial";
-
-    let xPos = 10;
     puaToOcrMap.clear();
+    let ocrCompletedCount = 0;
 
-    for (let i = 0; i < puaCharList.length; i++) {
-        let char = puaCharList[i];
-        ctx.fillText(char, xPos, 50);
-        xPos += charSpacing;
+    // Split into chunks of 2 or 3 characters, merging lone last one
+    const chunks = [];
+    let i = 0;
+    while (i < puaCharList.length) {
+        const remaining = puaCharList.length - i;
+
+        if (remaining === 1 && chunks.length > 0) {
+            // Merge the last single char into previous group
+            chunks[chunks.length - 1].push(puaCharList[i]);
+            break;
+        }
+
+        const groupSize = remaining >= 3 ? 3 : 2;
+        chunks.push(puaCharList.slice(i, i + groupSize));
+        i += groupSize;
     }
 
-    console.log("Canvas updated with PUA characters:", puaCharList);
+    scrollToBottom();
 
-    // Perform OCR on the canvas
-    Tesseract.recognize(
-        puaCanvas,
-        'chi_sim',
-        {
-            logger: m => console.log(m)
-        }
-    ).then(({ data: { text } }) => {
-        console.log("OCR Result:", text);
-        ocrResultElement.textContent = text;
+    chunks.forEach((charGroup, groupIndex) => {
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('char-wrapper');
 
-        let cleanedOCRText = text.replace(/\s/g, '');
+        const miniCanvas = document.createElement('canvas');
+        miniCanvas.width = 120 + 20;
+        miniCanvas.height = 60;
+        miniCanvas.classList.add('char-canvas');
 
-        if (cleanedOCRText.length !== puaCharList.length) {
-            notificationManager.showNotification("OCR Mismatch - Please manually complete the override section, you can scroll to the very bottom to copy and paste the available ocr to match their respective characters", { unique: true });
+        const ctx = miniCanvas.getContext('2d');
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, miniCanvas.width, miniCanvas.height);
+        ctx.fillStyle = 'black';
+        ctx.font = "20px 'jjwxcfont', Arial";
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        let xOffset = 0;
+        charGroup.forEach((char) => {
+            ctx.fillText(char, xOffset + miniCanvas.width / (2 * charGroup.length), miniCanvas.height / 2);
+            xOffset += miniCanvas.width / charGroup.length;
+        });
+
+        const resultDiv = document.createElement('div');
+        resultDiv.classList.add('textBox', 'ocr-pending');
+        resultDiv.textContent = '...';
+
+        wrapper.appendChild(miniCanvas);
+        wrapper.appendChild(resultDiv);
+        container.appendChild(wrapper);
+
+        Tesseract.recognize(
+            miniCanvas,
+            'chi_sim',
+            {
+                logger: m => console.log(`OCR ${groupIndex + 1}/${chunks.length}`, m)
+            }
+        ).then(({ data: { text } }) => {
+            const recognized = text.replace(/\s/g, '').slice(0, charGroup.length) || '';
+            const resultArray = recognized.split('');
+
+            if (resultArray.length === charGroup.length) {
+                // Valid match, map PUA to OCR
+                resultDiv.textContent = resultArray.join(' ');
+                resultDiv.classList.remove('ocr-pending');
+
+                charGroup.forEach((char, idx) => {
+                    puaToOcrMap.set(char, resultArray[idx] || '');
+                });
+
+                updateOutputWithOCR();
+            } else {
+                // OCR mismatch - still display what was detected, but don't map
+                resultDiv.textContent = resultArray.join(' ');
+                resultDiv.classList.remove('ocr-pending');
+
+                notificationManager.showNotification(`OCR Failed or Detected Extra Content for group ${groupIndex + 1}`, { unique: true });
+            }
+        }).catch(err => {
+            console.error(`OCR Error for group ${groupIndex + 1}:`, err);
+            resultDiv.textContent = '✖';
+            resultDiv.classList.remove('ocr-pending');
+
+            notificationManager.showNotification(`OCR Failed for group ${groupIndex + 1}`, { unique: true });
             scrollToBottom();
-            return;
-        }
-
-        for (let i = 0; i < puaCharList.length; i++) {
-            puaToOcrMap.set(puaCharList[i], cleanedOCRText[i]);
-        }
-
-        updateOutputWithOCR();
-
-        notificationManager.showNotification("Decode Complete", { unique: true });
-
-        scrollToBottom();
-    }).catch(err => {
-        console.error("OCR Error:", err);
-        notificationManager.showNotification("OCR Error: " + err.message, { unique: true });
-        scrollToBottom();
+        }).finally(() => {
+            ocrCompletedCount++;
+            if (ocrCompletedCount === chunks.length) {
+                notificationManager.showNotification("OCR Complete", { unique: true, duration: 3000 });
+                scrollToBottom();
+            }
+        });
     });
+
+    notificationManager.showNotification("Running OCR on all characters...", { unique: true });
 }
 
 // ==================== UTILITY FUNCTIONS ====================

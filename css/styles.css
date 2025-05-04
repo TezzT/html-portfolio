@@ -55,16 +55,20 @@ body {
 }
 
 #inputContainer3 {
-    flex-direction: column;
+    flex-direction: row;
     display: none;
     align-items: center;
     width: auto;
+    position: relative;
+    margin-top: 10px;
 }
 
-#inputContainer3 #puaCanvas {
-    background-color: white;
-    width: auto;
-    height: auto;
+#inputContainer3 h4 {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    translate: -50%;
+    width: 100%;
 }
 
 /* TextBox Styling */
@@ -375,6 +379,14 @@ body.dark-mode .mode-toggle {
 
 body.dark-mode ::placeholder {
     color: #a3a3a3;
+}
+
+.ocr-pending {
+    color: red;
+  }
+  
+  .char-wrapper .textBox {
+    text-align: center;
 }
 
 
