@@ -266,7 +266,6 @@ footer {
     background-color: #242323;
     color: white;
     display: flex;
-    justify-content: center;
     align-items: center;
     box-shadow: 6px 10px 10px rgba(0, 0, 0, 0.1);
     opacity: 0;
@@ -347,6 +346,37 @@ footer {
     justify-content: center;
     align-items: center;
     border: none;
+}
+
+
+#ocrController {
+    display: flex;
+    flex-direction: column;
+}
+
+#ocrController p {
+    padding: 0;
+    margin: 0;
+}
+
+.canvas-controls {
+    display: flex;
+    gap: 45px;
+    justify-content: center;
+}
+
+#ocrCharMargin, #ocrFontSize, #ocrSidePadding {
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1.1em;
+}
+
+.ocrcheckmark {
+    display: flex;
+    font-size: 12px;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Dark Mode */

@@ -133,19 +133,70 @@ function updateManualOverride(char, newValue) {
     }
 }
 
+// ==================== OCR VERSION ====================
+/**
+ * Select tesseract version
+ */
+function loadTesseractIfNeeded() {
+    return new Promise((resolve, reject) => {
+        const version = document.getElementById('tesseractVersion')?.value || '5';
+        const noCache = document.getElementById('tesseractNoCache')?.checked;
+        const timestamp = noCache ? `?t=${Date.now()}` : '';
+        const src = `https://cdn.jsdelivr.net/npm/tesseract.js@${version}/dist/tesseract.min.js${timestamp}`;
+
+        const existingScript = document.querySelector('script[data-tesseract]');
+        if (existingScript && existingScript.src.includes(`@${version}/`) && !noCache) {
+            resolve(); 
+            return;
+        }
+
+        if (existingScript) existingScript.remove();
+
+        const script = document.createElement('script');
+        script.src = src;
+        script.dataset.tesseract = 'true';
+        script.onload = () => {
+            notificationManager?.showNotification(`Tesseract.js v${version} loaded${noCache ? ' (no-cache)' : ''}`, { unique: true });
+            resolve();
+        };
+        script.onerror = () => {
+            notificationManager?.showNotification(`Failed to load Tesseract.js v${version}`, { unique: true });
+            reject(new Error("Tesseract load failed"));
+        };
+
+        document.head.appendChild(script);
+    });
+}
+
+
 // ==================== OCR FUNCTIONALITY ====================
 /**
  * Draws PUA characters onto the canvas and performs OCR.
  */
-function drawPUAToCanvas() {
+async function drawPUAToCanvas() {
+    try {
+        await loadTesseractIfNeeded();
+    } catch (err) {
+        console.error("OCR initialization aborted due to failed script load.");
+        return;
+    }
+
+    if (typeof Tesseract === 'undefined') {
+        notificationManager.showNotification("Tesseract.js failed to initialize.", { unique: true });
+        return;
+    }
+
     if (puaCharList.length === 0) {
         console.log("No PUA characters to draw.");
         return;
     }
 
+    const versionSelect = document.getElementById('tesseractVersion');
+    const selectedVersion = versionSelect?.value || 'unknown';
+
     const container = document.getElementById('inputContainer3');
     container.style.display = 'flex';
-    container.innerHTML = ''; // Clear previous content
+    container.innerHTML = '';
 
     const instructionHeading = document.createElement('h4');
     instructionHeading.textContent = 'Verify OCR: Copy characters from here if manual replacement needed';
@@ -154,18 +205,14 @@ function drawPUAToCanvas() {
     puaToOcrMap.clear();
     let ocrCompletedCount = 0;
 
-    // Split into chunks of 2 or 3 characters, merging lone last one
     const chunks = [];
     let i = 0;
     while (i < puaCharList.length) {
         const remaining = puaCharList.length - i;
-
         if (remaining === 1 && chunks.length > 0) {
-            // Merge the last single char into previous group
             chunks[chunks.length - 1].push(puaCharList[i]);
             break;
         }
-
         const groupSize = remaining >= 3 ? 3 : 2;
         chunks.push(puaCharList.slice(i, i + groupSize));
         i += groupSize;
@@ -173,27 +220,43 @@ function drawPUAToCanvas() {
 
     scrollToBottom();
 
+    const runningNotif = notificationManager.showNotification(
+        `Running OCR (Tesseract v${selectedVersion}) on all characters, please wait...`,
+        { unique: true }
+    );
+
+    const fontSize = parseInt(document.getElementById('ocrFontSize')?.value) || 20;
+    const charMargin = parseInt(document.getElementById('ocrCharMargin')?.value) || 10;
+    const sidePadding = parseInt(document.getElementById('ocrSidePadding')?.value) || 10;
+
     chunks.forEach((charGroup, groupIndex) => {
         const wrapper = document.createElement('div');
         wrapper.classList.add('char-wrapper');
 
+        const charCount = charGroup.length;
+        const canvasWidth = sidePadding * 2 + (fontSize + charMargin) * charCount - charMargin;
+        const canvasHeight = Math.ceil(fontSize * 1.5);
+
         const miniCanvas = document.createElement('canvas');
-        miniCanvas.width = 120 + 20;
-        miniCanvas.height = 60;
+        miniCanvas.width = canvasWidth;
+        miniCanvas.height = canvasHeight;
         miniCanvas.classList.add('char-canvas');
 
         const ctx = miniCanvas.getContext('2d');
         ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, miniCanvas.width, miniCanvas.height);
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
         ctx.fillStyle = 'black';
-        ctx.font = "20px 'jjwxcfont', Arial";
+        ctx.font = `${fontSize}px 'jjwxcfont', Arial`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        let xOffset = 0;
-        charGroup.forEach((char) => {
-            ctx.fillText(char, xOffset + miniCanvas.width / (2 * charGroup.length), miniCanvas.height / 2);
-            xOffset += miniCanvas.width / charGroup.length;
+        const totalCharWidth = (fontSize + charMargin) * charCount - charMargin;
+        let currentX = (canvasWidth - totalCharWidth) / 2 + fontSize / 2;
+        const centerY = canvasHeight / 2;
+
+        charGroup.forEach(char => {
+            ctx.fillText(char, currentX, centerY);
+            currentX += fontSize + charMargin;
         });
 
         const resultDiv = document.createElement('div');
@@ -215,39 +278,32 @@ function drawPUAToCanvas() {
             const resultArray = recognized.split('');
 
             if (resultArray.length === charGroup.length) {
-                // Valid match, map PUA to OCR
                 resultDiv.textContent = resultArray.join(' ');
                 resultDiv.classList.remove('ocr-pending');
-
                 charGroup.forEach((char, idx) => {
                     puaToOcrMap.set(char, resultArray[idx] || '');
                 });
-
                 updateOutputWithOCR();
             } else {
-                // OCR mismatch - still display what was detected, but don't map
                 resultDiv.textContent = resultArray.join(' ');
                 resultDiv.classList.remove('ocr-pending');
-
                 notificationManager.showNotification(`OCR Failed or Detected Extra Content for group ${groupIndex + 1}`, { unique: true });
             }
         }).catch(err => {
             console.error(`OCR Error for group ${groupIndex + 1}:`, err);
             resultDiv.textContent = '✖';
             resultDiv.classList.remove('ocr-pending');
-
             notificationManager.showNotification(`OCR Failed for group ${groupIndex + 1}`, { unique: true });
             scrollToBottom();
         }).finally(() => {
             ocrCompletedCount++;
             if (ocrCompletedCount === chunks.length) {
-                notificationManager.showNotification("OCR Complete", { unique: true, duration: 3000 });
+                if (runningNotif?.close) runningNotif.close();
+                notificationManager.showNotification(`OCR Complete (Tesseract v${selectedVersion})`, { unique: true, duration: 3000 });
                 scrollToBottom();
             }
         });
     });
-
-    notificationManager.showNotification("Running OCR on all characters...", { unique: true });
 }
 
 // ==================== UTILITY FUNCTIONS ====================
@@ -299,33 +355,39 @@ const notificationManager = (() => {
      */
     function showNotification(message, options = {}) {
         const { unique = false, duration = null } = options;
-
-        // If unique is true and the message is already displayed, return
+    
+        // If unique is true and the message is already displayed, return null
         if (unique && activeNotifications.has(message)) {
-            return;
+            return null;
         }
-
+    
         const notificationBox = document.createElement("div");
         notificationBox.classList.add("notifications");
         notificationBox.innerHTML = `
             <button class="closeButt" onclick="removeNotification(this)">x</button>
             <div class="notifContent">${message}</div>
         `;
-
+    
         notificationsContainer.appendChild(notificationBox);
-        notificationsContainer.style.display = "block"; // Show the container
-
-        // Add the message to the active notifications set
+        notificationsContainer.style.display = "block"; // Ensure it's visible
+    
         if (unique) {
             activeNotifications.add(message);
         }
-
-        // Calculate duration based on message length (100ms per character)
+    
         const autoDuration = duration !== null ? duration : Math.min(Math.max(message.length * 100, 1000), 10000);
-
-        // Auto-remove after calculated time
-        setTimeout(() => removeNotification(notificationBox), autoDuration);
+    
+        const timeoutId = setTimeout(() => removeNotification(notificationBox), autoDuration);
+    
+        // Return a handle with a .close() method to allow manual dismissal
+        return {
+            close: () => {
+                clearTimeout(timeoutId); // Prevent auto-dismiss
+                removeNotification(notificationBox);
+            }
+        };
     }
+    
 
     /**
      * Removes a notification.
