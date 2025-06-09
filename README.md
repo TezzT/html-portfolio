@@ -43,4 +43,4 @@ You have two options to proceed:
 
 ## Feedback
 
-- **Have Suggestions? Questions? Issues?** Send them at [Discord](https://discord.gg/y59JxZjX2u).
+- **Have Suggestions? Questions? Issues?** Send them at [Discord](https://discord.gg/HJUzeKDAXY).
