@@ -202,6 +202,10 @@ async function drawPUAToCanvas() {
     instructionHeading.textContent = 'Verify OCR: Copy characters from here if manual replacement needed';
     container.appendChild(instructionHeading);
 
+    const innerWrapper = document.createElement('div');
+    innerWrapper.classList.add('ocr-group-wrapper');
+    container.appendChild(innerWrapper);
+
     puaToOcrMap.clear();
     let ocrCompletedCount = 0;
 
@@ -243,9 +247,9 @@ async function drawPUAToCanvas() {
         miniCanvas.classList.add('char-canvas');
 
         const ctx = miniCanvas.getContext('2d');
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-        ctx.fillStyle = 'black';
+        ctx.fillStyle = '#000000';
         ctx.font = `${fontSize}px 'jjwxcfont', Arial`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -265,7 +269,7 @@ async function drawPUAToCanvas() {
 
         wrapper.appendChild(miniCanvas);
         wrapper.appendChild(resultDiv);
-        container.appendChild(wrapper);
+        innerWrapper.appendChild(wrapper);
 
         Tesseract.recognize(
             miniCanvas,
@@ -305,6 +309,7 @@ async function drawPUAToCanvas() {
         });
     });
 }
+
 
 // ==================== UTILITY FUNCTIONS ====================
 /**

@@ -36,13 +36,14 @@ you can support by donating at https://ko-fi.com/anothertezz
         <a>JJDecoder</a>
     </div>
 
+    <div class="sideButt">
     <button id="modeToggle" class="mode-toggle"></button>
 
     <button id="scrolldown" class="scrolldown">
         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#e1dbd6" class="bi bi-arrow-down" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1"/>
         </svg>
-    </button>
+    </button></div>
 
 
     <div class="notifications-container"></div>
@@ -52,6 +53,10 @@ you can support by donating at https://ko-fi.com/anothertezz
             <div>
                 <div class="textBox" id="inputContent1" contenteditable="plaintext-only"
                     placeholder="CONTENT INPUT HERE"></div>
+
+                <div id="keycontent">
+                    <div class="keyContent" id="keyInput" contenteditable="plaintext-only" placeholder="KEY HERE"></div>
+                </div>
             </div>
             <div>
                 <div class="textBox" id="outputContent1" contenteditable="false" placeholder="OUTPUT HERE"></div>
@@ -61,16 +66,11 @@ you can support by donating at https://ko-fi.com/anothertezz
         </div>
 
         <div class="input-container" id="inputContainer2">
-            <div id="keycontent">
-                <div class="textBox" id="keyInput" contenteditable="plaintext-only" placeholder="KEY HERE"></div>
-            </div>
-
             <h4>Manual Character Replacement:</h4>
             <div class="textBox" id="ocrOutput" contenteditable="false" placeholder="CHARA COUNT">
                 <div class="grid-container">
                 </div>
             </div>
-
         </div>
 
         <div class="input-container" id="inputContainer3">
@@ -143,7 +143,7 @@ you can support by donating at https://ko-fi.com/anothertezz
             </a>
         </div>
         <div class="footer-links" id="version">
-            <a class="footer-item-below" id="version">V2.0
+            <a class="footer-item-below" id="version">V2.1
             </a>
         </div>
         <div class="footer-acknowledgement">
