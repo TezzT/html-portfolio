@@ -505,3 +505,21 @@ const scrolltobottomofpage = document.getElementById('scrolldown');
 scrolltobottomofpage.addEventListener('click', function () {
     scrollToBottom();
 });
+
+
+// ==================== DOWNLOAD TEXT ====================
+/**
+ * Download to txt file basically
+ */
+function saveDivAsText() {
+    const divContent = document.getElementById('outputContent1').innerText;
+    const blob = new Blob([divContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'OUTPUT.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
