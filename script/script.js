@@ -438,7 +438,9 @@ updateCanvasButton.addEventListener('click', drawPUAToCanvas);
 // Copy Button
 document.getElementById('copyButton').addEventListener('click', function () {
     const outputElement = document.getElementById('outputContent1');
-    let formattedText = outputElement.innerText; // Preserves whitespace & only visible text
+    let formattedText = outputElement.innerText;
+
+    formattedText = formattedText.replace(/\u200C/g, "");
 
     const tempInput = document.createElement('textarea');
     tempInput.style.whiteSpace = "pre-wrap"; // Ensures whitespace is preserved
