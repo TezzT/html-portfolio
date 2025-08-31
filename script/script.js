@@ -304,7 +304,7 @@ async function drawPUAToCanvas() {
             if (ocrCompletedCount === chunks.length) {
                 if (runningNotif?.close) runningNotif.close();
                 notificationManager.showNotification(`OCR Complete (Tesseract v${selectedVersion})`, { unique: true, duration: 3000 });
-                scrollToBottom();
+                // scrollToBottom();
             }
         });
     });
