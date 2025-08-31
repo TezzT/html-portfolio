@@ -222,7 +222,7 @@ async function drawPUAToCanvas() {
         i += groupSize;
     }
 
-    scrollToBottom();
+    // scrollToBottom();
 
     const runningNotif = notificationManager.showNotification(
         `Running OCR (Tesseract v${selectedVersion}) on all characters, please wait...`,
@@ -514,7 +514,8 @@ scrolltobottomofpage.addEventListener('click', function () {
  * Download to txt file basically
  */
 function saveDivAsText() {
-    const divContent = document.getElementById('outputContent1').innerText;
+    let divContent = document.getElementById('outputContent1').innerText;
+    divContent = divContent.replace(/\u200C/g, "");
     const blob = new Blob([divContent], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
