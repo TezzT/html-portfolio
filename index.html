@@ -1,6 +1,5 @@
 <!-- 
 This project is made by Tezz (@anothertezz). 
-It was originally meant for Clown and co. Group
 If you enjoy using it and find it helpful, your support is greatly appreciated!
 
 you can support by donating at https://ko-fi.com/anothertezz
@@ -27,23 +26,21 @@ you can support by donating at https://ko-fi.com/anothertezz
     <link rel="stylesheet" href="css/styles.css">
     <style id="dynamic-styles"></style>
     <link rel="icon" href="icons/icon128.png">
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" data-tesseract="true"></script>    
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" data-tesseract="true"></script>
 </head>
 
 <body class="dark-mode">
-    <div class="image-container">
-        <img src="icons\ICON2.png" alt="logo">
-        <a>JJDecoder</a>
-    </div>
-
     <div class="sideButt">
-    <button id="modeToggle" class="mode-toggle"></button>
+        <button id="modeToggle" class="mode-toggle"></button>
 
-    <button id="scrolldown" class="scrolldown">
-        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#e1dbd6" class="bi bi-arrow-down" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1"/>
-        </svg>
-    </button></div>
+        <button id="scrolldown" class="scrolldown">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#e1dbd6" class="bi bi-arrow-down"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1" />
+            </svg>
+        </button>
+    </div>
 
 
     <div class="notifications-container"></div>
@@ -79,7 +76,8 @@ you can support by donating at https://ko-fi.com/anothertezz
 
         <div class="input-container" id="ocrController">
             <h4>OCR Control Panel</h4>
-            <p>If you encounter any issues with OCR accuracy or loading, try adjusting the options below before running decode</p>
+            <p>If you encounter any issues with OCR accuracy or loading, try adjusting the options below before running
+                decode</p>
             <div class="canvas-controls">
                 <label>
                     Font Size:
@@ -93,7 +91,7 @@ you can support by donating at https://ko-fi.com/anothertezz
                     Side Padding:
                     <input type="number" id="ocrSidePadding" value="10" min="0" max="100">
                 </label>
-            </div>  
+            </div>
 
             <div class="tesseract-ver">
                 <label>
@@ -107,57 +105,52 @@ you can support by donating at https://ko-fi.com/anothertezz
                 </label>
                 <label>
                     <div class="ocrcheckmark">
-                    <input type="checkbox" id="tesseractNoCache">
+                        <input type="checkbox" id="tesseractNoCache">
                         Force fresh load (Slower, Enable if issues with OCR)
                     </div>
                 </label>
             </div>
-        </div> 
+        </div>
     </div>
 
     <footer>
-        <div class="footer-links">
-            <a href="https://ko-fi.com/anothertezz" target="_blank" class="footer-item">
-                <img src="https://cdn.prod.website-files.com/5c14e387dab576fe667689cf/670f5a01229bf8a18f97a3c1_favion.png"
-                    alt="Ko-Fi" class="footer-logo">Ko-Fi
-            </a>
-            |
-            <a href="https://github.com/TezzT/JJDecodePlugin/tree/master" target="_blank" class="footer-item">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-discord"
-                    viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                        d="M1 8a7 7 0 1 1 2.898 5.673c-.167-.121-.216-.406-.002-.62l1.8-1.8a3.5 3.5 0 0 0 4.572-.328l1.414-1.415a.5.5 0 0 0 0-.707l-.707-.707 1.559-1.563a.5.5 0 1 0-.708-.706l-1.559 1.562-1.414-1.414 1.56-1.562a.5.5 0 1 0-.707-.706l-1.56 1.56-.707-.706a.5.5 0 0 0-.707 0L5.318 5.975a3.5 3.5 0 0 0-.328 4.571l-1.8 1.8c-.58.58-.62 1.6.121 2.137A8 8 0 1 0 0 8a.5.5 0 0 0 1 0" />
-                </svg> Plugin
-            </a>
-            |
-            <a href="https://discord.gg/HJUzeKDAXY" target="_blank" class="footer-item">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-discord"
-                    viewBox="0 0 16 16">
-                    <path
-                        d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0 8 8 0 0 0-.412-.833.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019q.463-.63.818-1.329a.05.05 0 0 0-.01-.059l-.018-.011a9 9 0 0 1-1.248-.595.05.05 0 0 1-.02-.066l.015-.019q.127-.095.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007q.121.1.248.195a.05.05 0 0 1-.004.085 8 8 0 0 1-1.249.594.05.05 0 0 0-.03.03.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.2 13.2 0 0 0 4.001-2.02.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019m-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612m5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612" />
-                </svg> Discord
-            </a>
+        <div class="image-container">
+            <img src="icons\ICON2.png" alt="logo">
+            <a>JJDecoder</a>
         </div>
+        <div>
+            <div class="footer-links">
+                <a href="https://ko-fi.com/anothertezz" target="_blank" class="footer-item">
+                    <img src="https://cdn.prod.website-files.com/5c14e387dab576fe667689cf/670f5a01229bf8a18f97a3c1_favion.png"
+                        alt="Ko-Fi" class="footer-logo">Ko-Fi
+                </a>
+                |
+                <a href="https://github.com/TezzT/JJDecodePlugin/tree/master" target="_blank" class="footer-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-discord" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M1 8a7 7 0 1 1 2.898 5.673c-.167-.121-.216-.406-.002-.62l1.8-1.8a3.5 3.5 0 0 0 4.572-.328l1.414-1.415a.5.5 0 0 0 0-.707l-.707-.707 1.559-1.563a.5.5 0 1 0-.708-.706l-1.559 1.562-1.414-1.414 1.56-1.562a.5.5 0 1 0-.707-.706l-1.56 1.56-.707-.706a.5.5 0 0 0-.707 0L5.318 5.975a3.5 3.5 0 0 0-.328 4.571l-1.8 1.8c-.58.58-.62 1.6.121 2.137A8 8 0 1 0 0 8a.5.5 0 0 0 1 0" />
+                    </svg> Plugin
+                </a>
+                |
+                <a href="https://discord.gg/HJUzeKDAXY" target="_blank" class="footer-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-discord" viewBox="0 0 16 16">
+                        <path
+                            d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0 8 8 0 0 0-.412-.833.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019q.463-.63.818-1.329a.05.05 0 0 0-.01-.059l-.018-.011a9 9 0 0 1-1.248-.595.05.05 0 0 1-.02-.066l.015-.019q.127-.095.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007q.121.1.248.195a.05.05 0 0 1-.004.085 8 8 0 0 1-1.249.594.05.05 0 0 0-.03.03.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.2 13.2 0 0 0 4.001-2.02.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019m-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612m5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612" />
+                    </svg> Discord
+                </a>
+            </div>
 
-        <div class="footer-links">
-            <a class="footer-item-below">Made by @anothertezz
-            </a>
+            <div class="footer-links">
+                <a class="footer-item-below">Made by @anothertezz
+                </a>
+            </div>
+            <div class="footer-links" id="version">
+                <a class="footer-item-below" id="version">V2.1
+                </a>
+            </div>
         </div>
-        <div class="footer-links" id="version">
-            <a class="footer-item-below" id="version">V2.1
-            </a>
-        </div>
-        <div class="footer-acknowledgement">
-            <span>
-                This project was originally made for
-                <a href="https://www.novelupdates.com/group/clown-co/" target="_blank"
-                    style="color: inherit; text-decoration: underline;">
-                    Clown and co.</a>
-                Group but has been developed to benefit a wider audience.
-            </span>
-        </div>
-
-
     </footer>
 
 
