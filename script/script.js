@@ -458,6 +458,7 @@ document.getElementById('copyButton').addEventListener('click', function () {
 window.addEventListener('load', function () {
     notificationManager.showNotification("Please consider donating to ko-fi or sharing if you find this project useful.");
     notificationManager.showNotification("If you encounter any issues, please report them to me. Your feedback is invaluable and helps me improve this project.");
+    notificationManager.showNotification("A fix for the free content copy has been added. Please redownload the plugin and replace the old files.");
 });
 
 // Ensure the container starts hidden
